@@ -1,19 +1,21 @@
-import React from "react"
-import ReactDOM from "react-dom/client"
+import React from "react";
+import ReactDOM from "react-dom/client";
 import {
   createBrowserRouter,
   createRoutesFromElements,
   Route,
   RouterProvider,
-} from "react-router-dom"
+} from "react-router-dom";
+import { Provider } from "react-redux";
+import store from "./store";
 // import "bootstrap/dist/css/bootstrap.min.css"
-import "./assets/styles/bootstrap.custom.css"
-import "./assets/styles/index.css"
-import App from "./App"
-import reportWebVitals from "./reportWebVitals"
+import "./assets/styles/bootstrap.custom.css";
+import "./assets/styles/index.css";
+import App from "./App";
+import reportWebVitals from "./reportWebVitals";
 // Screens
-import HomeScreen from "./screens/HomeScreen"
-import ProductScreen from "./screens/ProductScreen"
+import HomeScreen from "./screens/HomeScreen";
+import ProductScreen from "./screens/ProductScreen";
 
 const routes = createBrowserRouter(
   createRoutesFromElements(
@@ -22,13 +24,15 @@ const routes = createBrowserRouter(
       <Route path="/product/:id" element={<ProductScreen />} />
     </Route>
   )
-)
+);
 
-const root = ReactDOM.createRoot(document.getElementById("root"))
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <RouterProvider router={routes} />
+    <Provider store={store}>
+      <RouterProvider router={routes} />
+    </Provider>
   </React.StrictMode>
-)
+);
 
-reportWebVitals()
+reportWebVitals();
