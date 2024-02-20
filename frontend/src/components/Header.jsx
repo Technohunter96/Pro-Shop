@@ -1,4 +1,4 @@
-import { Badge, Navbar, Nav, Container } from "react-bootstrap"
+import { Badge, Navbar, Nav, Container, NavDropdown } from "react-bootstrap"
 import { FaShoppingCart, FaUser } from "react-icons/fa"
 import { LinkContainer } from "react-router-bootstrap"
 import { useSelector } from "react-redux"
@@ -6,7 +6,11 @@ import logo from "../assets/logo.png"
 
 function Header() {
   const { cartItems } = useSelector((state) => state.cart) // from cart in store
-  console.log(cartItems)
+  const { userInfo } = useSelector((state) => state.auth) // from auth in store
+
+  const logoutHandler = () => {
+    console.log("logout")
+  }
 
   return (
     <header>
@@ -31,11 +35,23 @@ function Header() {
                   )}
                 </Nav.Link>
               </LinkContainer>
-              <LinkContainer to="/signin">
-                <Nav.Link>
-                  <FaUser /> Sign In
-                </Nav.Link>
-              </LinkContainer>
+              {/* if userInfo is not null, show the user name and a dropdown with profile and logout, otherwise show sign in */}
+              {userInfo ? (
+                <NavDropdown title={userInfo.name} id="username">
+                  <LinkContainer to="/profile">
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
+                  </LinkContainer>
+                  <NavDropdown.Item onClick={logoutHandler}>
+                    Logout
+                  </NavDropdown.Item>
+                </NavDropdown>
+              ) : (
+                <LinkContainer to="/login">
+                  <Nav.Link>
+                    <FaUser /> Sign In
+                  </Nav.Link>
+                </LinkContainer>
+              )}
             </Nav>
           </Navbar.Collapse>
         </Container>
