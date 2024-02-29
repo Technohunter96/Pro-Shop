@@ -11,7 +11,23 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         body: data,
       }),
     }),
+    register: builder.mutation({
+      query: (data) => ({
+        url: USERS_URL,
+        method: "POST",
+        body: data,
+      }),
+    }),
+
+    logout: builder.mutation({
+      query: () => ({
+        url: `${USERS_URL}/logout`,
+        method: "POST",
+      }),
+    }),
   }),
 })
 
-export const { useLoginMutation } = usersApiSlice
+// exporting the generated hooks that in name contain the endpoint name in the middle ("login" => useLoginMutation, logout => useLogoutMutation)
+export const { useLoginMutation, useRegisterMutation, useLogoutMutation } =
+  usersApiSlice

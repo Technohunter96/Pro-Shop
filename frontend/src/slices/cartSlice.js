@@ -3,15 +3,14 @@ import { updateCart } from "../utils/cartUtils"
 
 const initialState = localStorage.getItem("cart")
   ? JSON.parse(localStorage.getItem("cart"))
-  : { cartItems: [] }
+  : { cartItems: [], shippingAddress: {}, paymentMethod: "PayPal" }
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
     addToCart: (state, action) => {
-      // NOTE: we don't need user, rating, numReviews or reviews
-      // in the cart
+      // NOTE: we don't need user, rating, numReviews or reviews in the cart so we remove them from the item that is copy of product handled by action.payload
       const { user, rating, numReviews, reviews, ...item } = action.payload
       const existItem = state.cartItems.find((x) => x._id === item._id)
 
@@ -30,9 +29,29 @@ const cartSlice = createSlice({
 
       return updateCart(state)
     },
+    saveShippingAddress: (state, action) => {
+      state.shippingAddress = action.payload
+
+      return updateCart(state)
+    },
+    savePaymentMethod: (state, action) => {
+      state.paymentMethod = action.payload
+
+      return updateCart(state)
+    },
+    clearCartItems: (state, action) => {
+      state.cartItems = []
+      return updateCart(state)
+    },
   },
 })
 
-export const { addToCart, removeFromCard } = cartSlice.actions
+export const {
+  addToCart,
+  removeFromCard,
+  saveShippingAddress,
+  savePaymentMethod,
+  clearCartItems,
+} = cartSlice.actions
 
 export default cartSlice.reducer
