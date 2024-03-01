@@ -1,15 +1,45 @@
 import { LinkContainer } from "react-router-bootstrap"
 import { Table, Button, Row, Col } from "react-bootstrap"
-import { FaTimes, FaEdit, FaTrash } from "react-icons/fa"
+import { FaEdit, FaTrash } from "react-icons/fa"
 import Message from "../../components/Message"
 import Loader from "../../components/Loader"
-import { useGetProductsQuery } from "../../slices/productsApiSlice"
+import { toast } from "react-toastify"
+import {
+  useGetProductsQuery,
+  useCreateProductMutation,
+  useDeleteProductMutation,
+} from "../../slices/productsApiSlice"
 
 const ProductListScreen = () => {
-  const { data: products, isLoading, error } = useGetProductsQuery()
+  const { data: products, isLoading, error, refetch } = useGetProductsQuery()
 
-  const deleteHandler = (id) => {
-    console.log("delete", id)
+  const [createProduct, { isLoading: loadingCreate }] =
+    useCreateProductMutation()
+
+  const [deleteProduct, { isLoading: loadingDelete }] =
+    useDeleteProductMutation()
+
+  const deleteHandler = async (id) => {
+    if (window.confirm("Are you sure?")) {
+      try {
+        await deleteProduct(id)
+        toast.success("Product removed")
+        refetch()
+      } catch (err) {
+        toast.error(err?.data?.message || err.error)
+      }
+    }
+  }
+
+  const createProductHandler = async () => {
+    if (window.confirm("Are you sure you want to create a new product?")) {
+      try {
+        await createProduct()
+        refetch()
+      } catch (err) {
+        toast.error(err?.data?.message || err.error)
+      }
+    }
   }
 
   return (
@@ -19,12 +49,14 @@ const ProductListScreen = () => {
           <h1>Products</h1>
         </Col>
         <Col className="text-end">
-          <Button className="btn-sm m-3">
+          <Button className="btn-sm m-3" onClick={createProductHandler}>
             <FaEdit /> Create Product
           </Button>
         </Col>
       </Row>
 
+      {loadingCreate && <Loader />}
+      {loadingDelete && <Loader />}
       {isLoading ? (
         <Loader />
       ) : error ? (
