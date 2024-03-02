@@ -10,7 +10,6 @@ import {
   useGetProductDetailsQuery,
   useUploadProductImageMutation,
 } from "../../slices/productsApiSlice"
-import { set } from "mongoose"
 
 const ProductEditScreen = () => {
   const { id: productId } = useParams()
@@ -65,6 +64,7 @@ const ProductEditScreen = () => {
         countInStock,
       }).unwrap()
       toast.success("Product updated")
+      refetch()
       navigate("/admin/productlist")
     } catch (err) {
       toast.error(err?.data?.message || err.error)
@@ -95,7 +95,7 @@ const ProductEditScreen = () => {
         {isLoading ? (
           <Loader />
         ) : error ? (
-          <Message variant="danger">{error}</Message>
+          <Message variant="danger">{error.data.message}</Message>
         ) : (
           <Form onSubmit={submitHandler}>
             <Form.Group controlId="name" className="my-2">
@@ -132,6 +132,7 @@ const ProductEditScreen = () => {
                 onChange={uploadFileHandler}
               ></Form.Control>
             </Form.Group>
+            {loadingUpload && <Loader />}
 
             <Form.Group controlId="brand" className="my-2">
               <Form.Label>Brand</Form.Label>

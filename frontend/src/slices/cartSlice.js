@@ -24,23 +24,34 @@ const cartSlice = createSlice({
 
       return updateCart(state)
     },
+
     removeFromCard: (state, action) => {
       state.cartItems = state.cartItems.filter((x) => x._id !== action.payload)
 
       return updateCart(state)
     },
+
     saveShippingAddress: (state, action) => {
       state.shippingAddress = action.payload
 
       return updateCart(state)
     },
+
     savePaymentMethod: (state, action) => {
       state.paymentMethod = action.payload
 
       return updateCart(state)
     },
+
     clearCartItems: (state, action) => {
       state.cartItems = []
+      return updateCart(state)
+    },
+
+    resetCart: (state) => {
+      state.cartItems = []
+      state.shippingAddress = {}
+      state.paymentMethod = "PayPal"
       return updateCart(state)
     },
   },
@@ -52,6 +63,7 @@ export const {
   saveShippingAddress,
   savePaymentMethod,
   clearCartItems,
+  resetCart,
 } = cartSlice.actions
 
 export default cartSlice.reducer

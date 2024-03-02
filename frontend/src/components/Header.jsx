@@ -5,6 +5,8 @@ import { LinkContainer } from "react-router-bootstrap"
 import { useSelector, useDispatch } from "react-redux"
 import { useLogoutMutation } from "../slices/usersApiSlice"
 import { logout } from "../slices/authSlice"
+import { resetCart } from "../slices/cartSlice"
+import SearchBox from "./SearchBox"
 import logo from "../assets/logo.png"
 
 function Header() {
@@ -19,7 +21,8 @@ function Header() {
   const logoutHandler = async () => {
     try {
       await logoutApiCall().unwrap() // calling the logout mutation
-      dispatch(logout()) // dispatching the logout action to set userInfo to null
+      dispatch(logout()) // dispatching the logout action to clear LocalStorage
+      dispatch(resetCart()) // dispatching the resetCart action to clear the cart
       navigate("/login")
     } catch (err) {
       console.log(err)
@@ -39,6 +42,7 @@ function Header() {
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse id="basic-navbar-nav">
             <Nav className="ms-auto">
+              <SearchBox />
               <LinkContainer to="/cart">
                 <Nav.Link>
                   <FaShoppingCart /> Cart
